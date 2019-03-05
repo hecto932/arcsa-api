@@ -16,6 +16,9 @@ const port = process.env.PORT || 3000;
 
 // third-party middlewares
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 // routes
 app.use('/api/users', usersApi);
