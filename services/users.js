@@ -7,11 +7,23 @@ class UsersService {
     this.mongoDb = new MongoLib();
   }
 
-  async getUsers({ query, options, sort }) {
-    sort.name = query.sortByName === 'desc' ? -1 : 1;
-    sort.age = query.sortByAge === 'desc' ? -1 : 1;
+  async getUsers({ query, options, sort, limit, skip }) {
+    // SORT BY NAME
+    if (query.sortByName === 'desc') {
+      sort.name = -1;
+    } else if (query.sortByName === 'asc') {
+      sort.name = 1;
+    }
+
+    // SORT BY AGE
+    if (query.sortByAge === 'desc') {
+      sort.age = -1;
+    } else if (query.sortByAge === 'asc') {
+      sort.age = 1;
+    }
     delete query.sortByName;
-    const users = await this.mongoDb.getAll(this.collection, query, options, sort);
+    delete query.sortByAge;
+    const users = await this.mongoDb.getAll(this.collection, query, options, sort, limit, skip);
     return users || [];
   }
 

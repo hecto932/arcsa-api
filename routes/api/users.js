@@ -24,9 +24,12 @@ router.get('/', async function (req, res, next) {
   const { query } = req;
   const options = { projection: { password: 0, role: 0 } }
   const sort = {};
+  const limit = 10;
 
   try {
-    const users = await userService.getUsers({ query, options, sort });
+    const skip = query.page ? (parseInt(query.page) - 1) * limit : 0;
+    delete query.page;
+    const users = await userService.getUsers({ query, options, sort, limit, skip });
     objResponse(res, 200, { data: users });
   } catch (err) {
     next(err);
