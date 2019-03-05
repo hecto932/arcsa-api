@@ -8,7 +8,11 @@ const config = {
   dbHost: process.env.MONGO_DB_HOST,
   dbPort: process.env.MONGO_DB_PORT,
   dbName: process.env.MONGO_DB_NAME,
-  authJwtSecret: process.env.AUTH_JWT_SECRET
+  authJwtSecret: process.env.AUTH_JWT_SECRET,
+  authAdminUser: process.env.AUTH_ADMIN_USER,
+  authAdminName: process.env.AUTH_ADMIN_NAME,
+  authAdminPassword: process.env.AUTH_ADMIN_PASSWORD,
+  authAdminEmail: process.env.AUTH_ADMIN_EMAIL,
 }
 
 module.exports = { config }

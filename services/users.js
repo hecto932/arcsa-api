@@ -7,8 +7,11 @@ class UsersService {
     this.mongoDb = new MongoLib();
   }
 
-  async getUsers({ query, projection }) {
-    const users = await this.mongoDb.getAll(this.collection, query, projection);
+  async getUsers({ query, options, sort }) {
+    sort.name = query.sortByName === 'desc' ? -1 : 1;
+    sort.age = query.sortByAge === 'desc' ? -1 : 1;
+    delete query.sortByName;
+    const users = await this.mongoDb.getAll(this.collection, query, options, sort);
     return users || [];
   }
 

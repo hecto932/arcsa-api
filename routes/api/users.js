@@ -4,6 +4,8 @@ const defualts = require('defaults');
 const UsersService = require('../../services/users');
 const objResponse = require('../../utils/objResponse');
 const validation = require('../../utils/middlewares/validationHandler');
+const validateRole = require('../../utils/middlewares/validateRole');
+const encryptPassword = require('../../utils/middlewares/encryptPassword');
 
 const {
   userIdSchema,
@@ -17,11 +19,11 @@ const userService = new UsersService();
 
 router.get('/', async function (req, res, next) {
   const { query } = req;
-  const projection = { projection: { password: 0, role: 0 } }
+  const options = { projection: { password: 0, role: 0 } }
   const sort = {};
 
   try {
-    const users = await userService.getUsers({ query, projection });
+    const users = await userService.getUsers({ query, options, sort });
     objResponse(res, 200, { data: users });
   } catch (err) {
     next(err);
@@ -31,17 +33,16 @@ router.get('/', async function (req, res, next) {
 router.get('/:userId', async function (req, res, next) {
   const { userId } = req.params;
   const projection = { projection: { password: 0, role: 0 } }
-  const sort = {};
 
   try {
     const users = await userService.get({ userId, projection });
-    objResponse(res, 200, { data: users });
+    objResponse(res, 200, { data: [users] });
   } catch (err) {
     next(err);
   }
 });
 
-router.post('/', validation(createUserSchema), async function (req, res, next) {
+router.post('/', validateRole, encryptPassword, validation(createUserSchema), async function (req, res, next) {
   const { body: user } = req;
   const projection = { projection: { password: 0, role: 0 } }
   

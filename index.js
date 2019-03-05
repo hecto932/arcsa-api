@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const usersApi = require('./routes/api/users');
+const authApi = require('./routes/api/auth');
 
 const {
   logErrors,
@@ -18,6 +19,7 @@ app.use(bodyParser.json());
 
 // routes
 app.use('/api/users', usersApi);
+app.use('/api/auth', authApi);
 
 // error handlers
 app.use(logErrors);
