@@ -1,3 +1,4 @@
+const debug = require('debug')('arcsa-api:user-service');
 const MongoLib = require('../lib/mongo');
 
 class UsersService {
@@ -6,10 +7,30 @@ class UsersService {
     this.mongoDb = new MongoLib();
   }
 
-  async getUsers(pararmeters) {
-    const query = pararmeters;
-    const users = await this.mongoDb.getAll(this.collection, query);
+  async getUsers({ query, projection }) {
+    const users = await this.mongoDb.getAll(this.collection, query, projection);
     return users || [];
+  }
+
+  async get({ userId, projection }) {
+    const user = await this.mongoDb.get(this.collection, userId, projection);
+    return user || {};
+  }
+
+  async createUser({ user }) {
+    const createUserId = await this.mongoDb.create(this.collection, user);
+    return createUserId;
+  }
+
+  async updateUser({ userId, user }) {
+    debug(userId, user);
+    const userUpdatedId = this.mongoDb.update(this.collection, userId, user);
+    return userUpdatedId;
+  }
+
+  async deleteUser({ userId }) {
+    const userDeletedId = this.mongoDb.delete(this.collection, userId);
+    return userDeletedId;
   }
 }
 

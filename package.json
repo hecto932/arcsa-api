@@ -4,8 +4,8 @@
   "description": "A simple javascript API for users",
   "main": "index.js",
   "scripts": {
-    "start": "node index",
-    "dev": "DEBUG=arcsa-api:* nodemon index"
+    "start": "NODE_ENV=production node index",
+    "dev": "NODE_ENV=development DEBUG=arcsa-api:* nodemon index"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
   "homepage": "https://github.com/hecto932/arcsa-api#readme",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "boom": "^7.3.0",
     "debug": "^4.1.1",
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
