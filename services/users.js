@@ -17,7 +17,7 @@ class UsersService {
 
   async get({ userId, projection }) {
     const user = await this.mongoDb.get(this.collection, userId, projection);
-    return user || {};
+    return user || false;
   }
 
   async createUser({ user }) {

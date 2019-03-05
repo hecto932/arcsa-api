@@ -10,12 +10,12 @@ passport.use(
 
     try {
       const [user] = await mongoDB.getAll('users', { username });
-      console.log(user);
+      debug(user);
 
       if (!user) {
         return cb(boom.unauthorized(), false);
       }
-      console.log(password, user.password);
+      debug(password, user.password);
       if (!(await bcrypt.compare(password, user.password))) {
         return cb(boom.unauthorized(), false);
       }

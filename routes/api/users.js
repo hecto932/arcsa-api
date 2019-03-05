@@ -1,6 +1,7 @@
 const debug = require('debug')('arcsa-api:user-router');
 const express = require('express');
-const defualts = require('defaults');
+const passport = require('passport');
+const boom = require('boom');
 const UsersService = require('../../services/users');
 const objResponse = require('../../utils/objResponse');
 const validation = require('../../utils/middlewares/validationHandler');
@@ -12,6 +13,8 @@ const {
   createUserSchema,
   updateUserSchema
 } = require('../../utils/schemas/users');
+
+require('../../utils/auth/strategies/jwt');
 
 const router = express.Router();
 
@@ -30,7 +33,7 @@ router.get('/', async function (req, res, next) {
   }
 });
 
-router.get('/:userId', async function (req, res, next) {
+router.get('/:userId', validation({ userId: userIdSchema }, "params") ,async function (req, res, next) {
   const { userId } = req.params;
   const projection = { projection: { password: 0, role: 0 } }
 
@@ -55,7 +58,7 @@ router.post('/', validateRole, encryptPassword, validation(createUserSchema), as
   }
 });
 
-router.put('/:userId', async function (req, res, next) {
+router.put('/:userId', validation({ userId: userIdSchema }, "params") , passport.authenticate("jwt", { session: false }), async function (req, res, next) {
   const { body:user } = req;
   const { userId } = req.params;
   const projection = { projection: { password: 0 } }
@@ -69,12 +72,22 @@ router.put('/:userId', async function (req, res, next) {
   }
 });
 
-router.delete('/:userId', async function (req, res, next) {
+router.delete('/:userId', validation({ userId: userIdSchema }, "params"), passport.authenticate("jwt", { session: false }), async function (req, res, next) {
   const { userId } = req.params;
 
   try {
-    const userDeletedId = await userService.deleteUser({ userId });
-    objResponse(res, 200, { data: [{ _id: userDeletedId }] });
+    const existUser = await userService.get({ userId });
+    if (existUser) {
+      const userDeletedId = await userService.deleteUser({ userId });
+      objResponse(res, 200, { data: [{ _id: userDeletedId }] });
+    } else {
+      res.status(400).json({
+        error: true,
+        message: `${userId} does not exist...`,
+        result: []
+      })
+    }
+
   } catch (err) {
     next(err);
   }

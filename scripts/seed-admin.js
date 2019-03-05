@@ -3,19 +3,19 @@ const chalk = require('chalk');
 const MongoLib = require('../lib/mongo');
 const { config } = require('../config');
 
-console.log(config);
+debug(config);
 
 function buildAdminUser(password) {
   return {
     password,
-    username: config.authAdminUsername,
+    username: config.authAdminUser,
     email: config.authAdminEmail
   };
 }
 
 async function hasAdminUser(mongoDB) {
   const adminUser = await mongoDB.getAll('users', {
-    username: config.authAdminUsername
+    username: config.authAdminUser
   });
   
   return adminUser && adminUser.length;
@@ -32,16 +32,16 @@ async function seedAdmin () {
     const mongoDB = new MongoLib();
     
     if (await hasAdminUser(mongoDB)) {
-      console.log(chalk.yellow('Admin user already exists'));
+      debug(chalk.yellow('Admin user already exists'));
       return process.exit(1);
     }
 
     const adminUserId = await createAdminUser(mongoDB);
-    console.log(chalk.green('Admin user created with id:', adminUserId));
+    debug(chalk.green('Admin user created with id:', adminUserId));
     return process.exit(0);
 
   } catch (err) {
-    console.log(chalk.red(err))
+    debug(chalk.red(err))
     process.exit
   }
 }
