@@ -10,7 +10,8 @@ const createUserSchema = {
     .required(),
   username: Joi.string()
     .required(),
-  avatar: Joi.string(),
+  avatar: Joi.string()
+    .required(),
   email: Joi.string()
     .email()
     .required(),

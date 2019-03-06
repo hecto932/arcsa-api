@@ -9,18 +9,6 @@ const validateRole = require('../../utils/middlewares/validateRole');
 const validateAvatar = require('../../utils/middlewares/validateAvatar');
 const encryptPassword = require('../../utils/middlewares/encryptPassword');
 
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, path.join(__dirname, '../../uploads'))
-//   },
-//   filename: function (req, file, cb) {
-//     debug(file);
-//     cb(null, file.fieldname + '-' + Date.now())
-//   }
-// })
-
-// const upload = multer({ storage });
-
 const {
   userIdSchema,
   createUserSchema,
@@ -76,7 +64,7 @@ router.post('/', validateAvatar, multerStorage('avatar'), validateRole, validati
   }
 });
 
-router.put('/:userId', validation({ userId: userIdSchema }, 'params'), passport.authenticate('jwt', { session: false }), async function (req, res, next) {
+router.put('/:userId', validation({ userId: userIdSchema }, 'params'), validation(updateUserSchema), passport.authenticate('jwt', { session: false }), async function (req, res, next) {
   const { body: user } = req;
   const { userId } = req.params;
   const projection = { projection: { password: 0 } }

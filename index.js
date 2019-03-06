@@ -1,6 +1,7 @@
 const debug = require('debug')('arcsa-api:server');
 const express = require('express');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
 
 const usersApi = require('./routes/api/users');
 const authApi = require('./routes/api/auth');
@@ -15,6 +16,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // third-party middlewares
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
