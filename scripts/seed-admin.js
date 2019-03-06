@@ -1,3 +1,4 @@
+const debug = require('debug')('mongo-setup:seed-admin');
 const bcrypt = require('bcrypt');
 const chalk = require('chalk');
 const MongoLib = require('../lib/mongo');
@@ -14,9 +15,13 @@ function buildAdminUser(password) {
 }
 
 async function hasAdminUser(mongoDB) {
-  const adminUser = await mongoDB.getAll('users', {
-    username: config.authAdminUser
-  });
+  const collection = 'users';
+  const query = { username: config.authAdminUser }
+  const options = {};
+  const sort = {};
+  const limit = 1;
+  const skip = 0;
+  const adminUser = await mongoDB.getAll(collection, query, options, sort, limit, skip);
   
   return adminUser && adminUser.length;
 }
@@ -42,7 +47,7 @@ async function seedAdmin () {
 
   } catch (err) {
     debug(chalk.red(err))
-    process.exit
+    process.exit(1);
   }
 }
 
