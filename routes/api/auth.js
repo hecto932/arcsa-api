@@ -24,7 +24,7 @@ api.post('/token', async function (req, res, next) {
         }
         const payload = { sub: user.username, email: user.email };
         const token = jwt.sign(payload, config.authJwtSecret, {
-          expiresIn: '15min'
+          expiresIn: '8h'
         });
 
         return res.status(200).json({ access_token: token });
