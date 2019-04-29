@@ -1,3 +1,4 @@
+const debug = require('debug')('arcsa-api:basic-strategy');
 const passport = require('passport');
 const { BasicStrategy } = require('passport-http');
 const boom = require('boom');

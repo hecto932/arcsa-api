@@ -1,3 +1,4 @@
+const debug = require('debug')('arcsa-api:auth-router');
 const express = require('express');
 const passport = require('passport');
 const boom = require('boom');
@@ -30,7 +31,7 @@ api.post('/token', async function (req, res, next) {
         return res.status(200).json({ access_token: token });
       })
     } catch (err) {
-      reut
+      next(err);
     }
   })(req, res, next);
 })

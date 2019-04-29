@@ -34,3 +34,5 @@ app.use(clientErrorHandlers);
 const server = app.listen(port, () => {
   debug(`Server listening on port http://localhost:${server.address().port}`);
 })
+
+module.exports = server;
